@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/lib/vue.js"></script>
+    <link rel="stylesheet" href="/lib/animate.css">
+    <!-- 入场使用 bounceIn ； 离场使用bounceOut -->
+</head>
+
+<body>
+    <div id="app">
+        <input type="button" value="toggle" @click="flag = !flag">
+        <!-- 点击按钮，让h3显示，再次点击h3消失 -->
+        <!-- 声明使用bounceIn 和 bounceOut，使用之前需声明使用animated基类，某些类可以不使用，但最好还是都使用，以防万一 -->
+        <!-- <transition enter-active-class="animated bounceIn" leave-active-class="animated bounceOut"> -->
+        <!-- <transition enter-active-class="bounceIn" leave-active-class="bounceOut">
+            <h3 v-if="flag">这是一个h3</h3>
+        </transition> -->
+
+        <!-- animated也可以在具体标签中class中替代使用 -->
+        <!-- <transition enter-active-class="lightSpeedIn" leave-active-class="lightSpeedOut">
+            <h3 v-if="flag" class="animated">这是一个h3</h3>
+        </transition> -->
+
+        <!-- :duration 设置动画完成时间（单位：ms）:入场时间，离场时间 -->
+        <!-- :duration="毫秒值" 来统一设置 入场 和 离场 时候的动画时长 -->
+        <!-- <transition enter-active-class="lightSpeedIn" leave-active-class="lightSpeedOut" :duration="400">
+            <h3 v-if="flag" class="animated">这是一个h3</h3>
+        </transition> -->
+
+        <!-- 使用 :duration="{ enter: 200, leave: 400}" 来分别指定入场时间和离场时间 -->
+        <transition enter-active-class="lightSpeedIn" leave-active-class="lightSpeedOut" :duration="{ enter: 200, leave: 400}">
+            <h3 v-if="flag" class="animated">这是一个h3</h3>
+        </transition>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                flag: false
+            },
+            methods: {
+
+            }
+        })
+    </script>
+</body>
+
+</html>

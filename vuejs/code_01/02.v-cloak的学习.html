@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/lib/vue.js"></script>
+    <style>
+        /* 防止数据在，网速慢的时候Vue.js没加载出来的时候 
+            出现变量名 {{ msg }}
+            vue 2.6 版本改善了这个情况，无需这样设置
+         */
+        /* [v-cloak]{
+            display: none
+        } */
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- vue 使用变量数据的方式 -->
+        <!-- 方式一 -->
+        <!-- v-cloak 在Vue 2.6 之后不用设置 -->
+        <p v-cloak>{{ msg }}</p>
+        <!-- 方式二 -->
+        <h3 v-text="msg"></h3>
+        <!-- 两种方式的区别 -->
+        <!-- 
+            第一种方式 在Vue2.6之前加载缓慢的时候会出现变量名，第二中方式不会
+            第一种方式不会覆盖原有的标签内容，只会替换占位符，第二种方式会覆盖原有标签的所有内容
+         -->
+        <div>{{ msg2 }}</div>
+        <div v-text="msg2"></div>
+        <div v-html="msg2"></div>
+        <!-- html input 的title 属性：鼠标悬浮在input标签上面显示的内容 -->
+        <input type="button" value="按钮" title="mytitle">
+        <input type="button" value="按钮" title="{{ mytitle }}">
+        <!-- 上面两种方式都不会显示变量的内容，只会原样显示字符串 -->
+        
+        <!-- 如需使用需要绑定变量 -->
+        <!-- 
+            v-bind: 是Vue中，提供用于绑定属性的指令
+            其值相当于执行一个JavaScript表达式
+            所以可以通过表达式来添加预定义的字符串
+            v-bind中可以写合法的JavaScript表达式
+         -->
+        <input type="button" value="按钮" v-bind:title="mytitle">
+        <!-- v-bind: 可以简写为 : -->
+        <input type="button" value="按钮" :title="mytitle">
+        <input type="button" value="按钮" v-bind:title="mytitle + '，添加的值'">
+
+        <!-- Vue中提供了 v-on: 事件绑定机制 缩写为 @-->
+        <input type="button" value="按钮" v-bind:title="mytitle" v-on:click="showAlert">
+        <input type="button" value="按钮" v-bind:title="mytitle" @click="showAlert">
+        <input type="button" value="按钮" v-bind:title="mytitle" v-on:mouseover="showAlert">
+
+
+
+    </div>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                msg: '123',
+                msg2: "<h1>我是一个大大的h1，我大，我骄傲！</h1>",
+                mytitle: '这是一个自己定义的title'
+            },
+            methods: {  // 这个methods属性定义了当前Vue实例可用的所有方法
+                showAlert: function() {
+                    alert('hello');
+                }
+
+            }
+        })
+    </script>
+</body>
+
+</html>
+
+
+<!-- 1.如何定义一个基本的vue代码结构 -->
+<!-- 2.插值表达式 和 v-text -->
+<!-- 3.v-cloak -->
+<!-- 4.v-html -->
+<!-- 5.v-bind vue提供的属性绑定机制 缩写为  : -->
+<!-- 6.v-on   vue提供的事件绑定机制 缩写为  @ -->

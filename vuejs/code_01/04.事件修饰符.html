@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/lib/vue.js"></script>
+    <style>
+        .inner {
+            height: 150px;
+            background-color: darkcyan;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 
+            事件捕获（event  capturing）：通俗的理解就是，当鼠标点击或者触发dom事件时，浏览器会从根节点开始由外到内进行事件传播，即点击了子元素，如果父元素通过事件捕获方式注册了对应的事件的话，会先触发父元素绑定的事件。
+
+            事件冒泡（dubbed  bubbling）：与事件捕获恰恰相反，事件冒泡顺序是由内到外进行事件传播，直到根节点。
+
+            无论是事件捕获还是事件冒泡，它们都有一个共同的行为，就是事件传播，它就像一跟引线，只有通过引线才能将绑在引线上的鞭炮（事件监听器）引爆，试想一下，如果引线不导火了，那鞭炮就只有一响了！！！ 
+
+            dom标准事件流的触发的先后顺序为：先捕获再冒泡，即当触发dom事件时，会先进行事件捕获，捕获到事件源之后通过事件传播进行事件冒泡。不同的浏览器对此有着不同的实现，IE10及以下不支持捕获型事件，所以就少了一个事件捕获阶段，IE11、Chrome 、Firefox、Safari等浏览器则同时存在。
+        -->
+        <!-- 使用.stop 阻止冒泡 -->
+        <!-- <div class="inner" @click="divHandler">
+            
+            <input type="button" value="戳他" @click.stop="btnHandler">
+        </div> -->
+
+        <!-- 使用 .prevent 阻止默认行为,如表单的submit事件 -->
+        <!-- <a href="http://www.baidu.com" @click.prevent="linkClick">有问题，先百度</a> -->
+
+        <!-- 使用 .capture 实现捕获触发机制的事件 -->
+        <!-- <div class="inner" @click.capture="divHandler">
+            <input type="button" value="戳他" @click.stop="btnHandler">
+        </div> -->
+
+        <!-- 使用 .self 来实现只有点击当前元素才触发事件处理函数 -->
+        <!-- <div class="inner" @click.self="divHandler">
+            <input type="button" value="戳他" @click="btnHandler">
+        </div> -->
+
+
+        <!-- 使用 .once 只实现一次事件处理函数 -->
+        <!-- <a href="http://www.google.com" @click.prevent.once="linkClick">有问题，先谷歌</a> -->
+        <!-- 事件串联，这两种实现的效果相同, .once 也会使.prevent只生效一次 -->
+        <a href="http://www.google.com" @click.once.prevent="linkClick">有问题，先谷歌</a>
+        
+
+        <!-- .self 只会阻止自己身上的冒泡行为的触发，并不会真正的阻止冒泡行为 -->
+    </div>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+
+            },
+            methods: {
+                divHandler() {
+                    console.log("触发了inner div的点击事件。");
+
+                },
+                btnHandler() {
+                    console.log("触发了input button的点击事件。");
+
+                },
+                linkClick() {
+                    console.log('触发了链接的点击事件。');
+
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>

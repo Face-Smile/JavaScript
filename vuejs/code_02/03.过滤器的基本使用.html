@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/lib/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <p>{{ msg | msgFormat('太', '单纯') | test }}</p>
+    </div>
+    <script>
+        // 定义一个全局过滤器，过滤器必须放在Vue实例声明之前，不然会报错
+        // 
+        /* Vue.filter('msgFormat', function (msg) {
+            // return msg.replace('/单纯/g', '太单d纯');
+            // 注意： 正则表达式无需加引号
+            return msg.replace(/单纯/g, '天真');
+        }); */
+        Vue.filter('msgFormat', function (msg, arg, arg2) {
+            // return msg.replace('/单纯/g', '太单d纯');
+            // 注意： 正则表达式无需加引号
+            return msg.replace(/单纯/g, arg + arg2);
+        });
+
+        Vue.filter('test', function(msg) {
+            return msg + '========';
+        })
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                msg: '曾经，我也是一个单纯的少年，单纯的我，傻傻的我，谁是世界上最纯洁的男人'
+            },
+            methods: {
+
+            }
+        });
+
+    </script>
+</body>
+
+</html>

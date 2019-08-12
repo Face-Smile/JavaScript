@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/lib/vue.js"></script>
+    <script src="/lib/vue-resource.js"></script>
+    <link rel="stylesheet" href="/lib/bootstrap.css">
+</head>
+
+<body>
+    <div id="app">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">添加品牌</h3>
+            </div>
+            <div class="panel-body form-inline">
+                <!-- <label for="">
+                    Id:
+                    <input type="text" v-model="id" class="form-control">
+                </label> -->
+                <label for="">
+                    Name:
+                    <input type="text" v-model="name" class="form-control">
+                </label>
+                <input type="button" value="添加" @click="add" class="btn btn-primary">
+            </div>
+        </div>
+
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Ctime</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in list" v-bind:key="item.id">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.ctime }}</td>
+                    <td><a href="" @click.prevent="del(item.id)">删除</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <script>
+        // 设置Vue全局请求的根入口
+        // 如果设置全局请求入口，则使用请求的时候必须使用相对路径，即不能以/开头，否则会使用当前的域名进行拼接，而不是设置的域名
+        Vue.http.options.root = 'http://www.liulongbin.top:3005';
+        // 全局设置，使用普通的表单数据形式提交数据，相当于请求头中设置Content-Type: application/x-www-form-urlencoded
+        Vue.http.options.emulateJSON = true;
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                /* id: '', */
+                name: '',
+                list: [
+                    { id: 1, name: '五菱宏光', ctime: new Date() },
+                    { id: 2, name: '众泰', ctime: new Date() }
+                ]
+            },
+            methods: {
+                add() {  // 添加品牌服务器
+                    // 分析：
+                    // 1. 通过查找api ，发现需要post请求提交数据
+                    // 2. this.$http.post() 中含有三个参数：
+                    //      2.1 第一个参数： 要请求的url地址
+                    //      2.2 第二个参数： 要提交给服务器的数据，以对象的形式提交给服务器 { name: this.name }
+                    //      2.3 第三个参数： 是一个配置对象，要以那种表单数据类型提交过去，{ emulateJSON: true } 表示以普通表单格式提交数据给服务器 application/x-www-form-urlencoded
+                    // 3. 在post方法中，使用 .then 来设置成功的回调函数，结果在 result.body 中
+
+                    // this.$http.post('http://www.liulongbin.top:3005/api/addproduct', { name: this.name }, { emulateJSON: true}).then(response => {
+                    // 设置Vue全局根入口之后，无需写前面的网站根入口网址,注意更改之后url前面不用写/，否则还会使用当前页面的域名网址
+                    // this.$http.post('api/addproduct', { name: this.name }, { emulateJSON: true}).then(response => {
+                    // 全局配置emulateJSON参数 post中可以不写
+                    this.$http.post('api/addproduct', { name: this.name }).then(response => {
+                        let res = response.body;
+                        if(res.status === 0){
+                            // 成功了，在调用getAllList 同步数据
+                            // console.log('添加成功！！！');
+                            console.log(res.message);
+                            this.getAllList();
+                        }else{
+                            // 失败
+                            alert('添加失败。。。');
+                        }
+                    })
+                    
+                },
+                getAllList() { // 获取所有的品牌列表
+                    console.log('get all list data!!!!');
+                    // 设置Vue全局根入口之后，无需写前面的网站根入口网址,注意更改之后url前面不用写/，否则还会使用当前页面的域名网址
+                    // this.$http.get('http://www.liulongbin.top:3005/api/getprodlist').then(result => {
+                    this.$http.get('api/getprodlist').then(result => {
+                        // 注意通过 $http 获取的数据都在 respose.body 中
+                        var res = result.body;
+                        console.log(res);
+                        if(res.status === 0){
+                            // 获取数据成功了
+                            this.list = res.message;
+                        }else{
+                            // 获取数据失败
+                            alert('获取数据失败!');
+                        }
+                    });
+                },
+                del(id) { // 删除品牌方法
+                    // 设置Vue全局根入口之后，无需写前面的网站根入口网址,注意更改之后url前面不用写/，否则还会使用当前页面的域名网址
+                    // this.$http.get('http://www.liulongbin.top:3005/api/delproduct/' + id).then(response => {
+                    this.$http.get('api/delproduct/' + id).then(response => {
+                        let res = response.body;
+                        if(res.status === 0){
+                            console.log('删除成功！！！！');
+                            this.getAllList();
+                        }else{
+                            // 失败
+                            alert('删除失败。。。');
+                        }
+                    });
+                }
+            },
+            created() {
+                    console.log('call getAllList');
+                    this.getAllList();
+            }
+        });
+    </script>
+</body>
+
+</html>
